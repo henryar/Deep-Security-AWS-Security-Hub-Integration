@@ -19,7 +19,7 @@ Credit: This is a re-write of an [existing script.](https://github.com/deep-secu
 
 Note: If you're using multiple accounts, you will need to configure your [Master and Member accounts.](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-accounts.html)
 
-## SNS
+## SNS & IAM
 
 1. Create a new SNS topic.
 2. Create a new IAM account with programmatic access.
