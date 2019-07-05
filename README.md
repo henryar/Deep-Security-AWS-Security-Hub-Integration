@@ -4,12 +4,6 @@ Send Deep Security security events to AWS Security Hub.
 
 Credit: This is a re-write of an [existing script.](https://github.com/deep-security/aws-security-hub)
 
-# Deep Security
-
-1. Set up SNS as per [these instructions.](https://www.trendmicro.com/aws/sending-security-event-data-amazon-sns/)
-2. Create a policy with the desired options enabled.
-3. Enable the [AWS connector.](https://help.deepsecurity.trendmicro.com/Add-Computers/add-aws.html)
-
 # AWS Configuration
 ## Organizations (optional)
 
@@ -32,6 +26,12 @@ Note: If you're using multiple accounts, you will need to configure your [Master
 3. Give the account `sns:publish` access to the newly created SNS topic.
 4. Create a Lambda with **"basic Lambda permissions"**.
 5. Add a rule to allow **"BatchImportFindings"**.
+
+# Deep Security
+
+1. Set up SNS as per [these instructions.](https://www.trendmicro.com/aws/sending-security-event-data-amazon-sns/)
+2. Create a policy with the desired options enabled.
+3. Enable the [AWS connector.](https://help.deepsecurity.trendmicro.com/Add-Computers/add-aws.html)
 
 ### Test Deep Security Connectivity (optional)
 
