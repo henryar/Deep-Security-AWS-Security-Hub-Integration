@@ -11,8 +11,6 @@ Send Deep Security security events to AWS Security Hub.
 ## Security Hub
 
 1. Browse to the Security Hub page in your account.
-2. Click **"Try Security Hub for free"**
-3. Click **"Enable AWS Security Hub"**
 4. Click **"Integrations"** -> enable **"Deep Security"**
 
 Note: If you're using multiple accounts, you will need to configure your [Master and Member accounts.](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-accounts.html)
@@ -25,8 +23,8 @@ Note: If you're using multiple accounts, you will need to configure your [Master
 
 ## Lambda & IAM
 
-1. Create a Lambda with **"basic Lambda permissions"**.
-2. Add rule to allow **"BatchImportFindings"**.
+1. Create a Lambda with `basic Lambda permissions`.
+2. Add rule to allow `BatchImportFindings`.
 
 # Deep Security
 
