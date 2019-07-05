@@ -7,6 +7,11 @@ from botocore.exceptions import ClientError
 
 AWS_REGION = os.environ['AWS_REGION']
 
+# Default settings
+MALWARE_NORMALIZED_SEVERITY = 90
+FIREWALL_NORMALIZED_SEVERITY = 20
+
+# Configurable settings
 FIREWALL_REPEAT_THRESHOLD = int(os.getenv('FIREWALL_REPEAT_THRESHOLD', 5))
 IPS_SEVERITY_THRESHOLD = int(os.getenv('IPS_SEVERITY_THRESHOLD', 3))
 WEB_REPUTATION_THRESHOLD = int(os.getenv('WEB_REPUTATION_THRESHOLD', 3))
@@ -89,12 +94,9 @@ class DeepSec:
             return False
 
         self._print_threshold_message('Firewall', FIREWALL_REPEAT_THRESHOLD, above_threshold=True)
-
-        self.aff_payload['Severity']['Product'] = 0
-        self.aff_payload['Severity']['Normalized'] = 20  # An 'could result in future compromises'
+        self.aff_payload['Severity']['Normalized'] = FIREWALL_NORMALIZED_SEVERITY
         self.aff_payload['Types'].append('Unusual Behaviors/Network Flow')
-        self.aff_payload['Title'] = generate_title(f'Repeated attempted network connection on '
-                                                   f'instance {self.host_instance_id}')
+        self.aff_payload['Title'] = 'Repeated attempted network connection on instance {self.host_instance_id}'
 
         return True
 
@@ -118,7 +120,7 @@ class DeepSec:
         trigger_reason = self.ds_event['Reason']
 
         self.aff_payload['Types'].append('Software and Configuration Checks Vulnerabilities/Vulnerabilities/CVE')
-        self.aff_payload['Title'] = generate_title(f'Rule triggered: {trigger_reason}')
+        self.aff_payload['Title'] = f'Rule triggered: {trigger_reason}'
 
         return True
 
@@ -135,8 +137,9 @@ class DeepSec:
             }
         ]
 
+        self.aff_payload['Severity']['Normalized'] = MALWARE_NORMALIZED_SEVERITY
         self.aff_payload['Types'].append('TPPs/Execution')
-        self.aff_payload['Title'] = generate_title(f'Malware detected: {malware_name}')
+        self.aff_payload['Title'] = f'Malware detected: {malware_name}'
 
         return True
 
@@ -156,7 +159,7 @@ class DeepSec:
 
         target_ip = self.ds_event['TargetIP']
         title = f'High risk web request to IP: {target_ip}'
-        self.aff_payload['Title'] = generate_title(title)
+        self.aff_payload['Title'] = title
 
         self._print_threshold_message('IPS', WEB_REPUTATION_THRESHOLD, above_threshold=True, additional_info=title)
 
@@ -174,14 +177,13 @@ class DeepSec:
         self._print_threshold_message('Integrity Monitoring', INTEGRITY_MONITORING_THRESHOLD, above_threshold=True)
 
         self.aff_payload['Severity']['Product'] = severity
-
         # to match the 31-70 range in the AFF format
         self.aff_payload['Severity']['Normalized'] = int(severity * 17.5)
 
         self.aff_payload['Types'].append('Unusual Behaviors/VM')
 
         object_key = self.ds_event['Key']
-        self.aff_payload['Title'] = generate_title(f'Unexpected change to object: {object_key}')
+        self.aff_payload['Title'] = f'Unexpected change to object: {object_key}'
 
         return True
 
@@ -209,7 +211,7 @@ class DeepSec:
         self.aff_payload['Types'].append('Unusual Behaviors/Application')
 
         ossec_description = self.ds_event['OSSEC_Description']
-        self.aff_payload['Title'] = generate_title(ossec_description)
+        self.aff_payload['Title'] = ossec_description
 
         return True
 
@@ -259,7 +261,6 @@ class DeepSec:
         # Z suffix required by API
         msg_date = f'{current_tme}Z'
 
-    
         aff_format = {
             'SchemaVersion': '2018-10-08',
             'Id': f'{AWS_REGION}/{host_owner_id}/{self.host_instance_id}/{tenant_id}/{event_id}',
@@ -273,7 +274,6 @@ class DeepSec:
             'CreatedAt': msg_date,
             'Severity': {
                 'Product': 0,
-                'Normalized': 0,
             },
             'ProductFields': {
                 'trend-micro:TenantName': tenant_name,
@@ -292,7 +292,7 @@ class DeepSec:
             'Resources': [
                 {
                     'Type': 'AwsEc2Instance',
-                    'Id': self.host_instance_id,
+                    'Id': f'Account: {host_owner_id} Instance: {self.host_instance_id}',
                 }
             ],
         }
@@ -318,15 +318,6 @@ class DeepSec:
 
         else:
             print(msg)
-
-
-def generate_title(title):
-    """
-    Generate a consistent title for a finding in AWS Security Hub
-    * Setup as a function for consistency
-    """
-    
-    return f'Trend Micro - {title}'
 
 
 def verify_required_properties(sec_event):

@@ -2,8 +2,6 @@
 
 Send Deep Security security events to AWS Security Hub.
 
-Credit: This is a re-write of an [existing script.](https://github.com/deep-security/aws-security-hub)
-
 # AWS Configuration
 ## Organizations (optional)
 
@@ -82,3 +80,7 @@ Note: If you're using multiple accounts, you will need to configure your [Master
 # Troubleshooting
 
 If no entries appear in Security Hub, check the Lambda's log.
+
+# Credit
+
+This is a re-write of an [existing script.](https://github.com/deep-security/aws-security-hub) This version includes additonal features and logging outputs.
