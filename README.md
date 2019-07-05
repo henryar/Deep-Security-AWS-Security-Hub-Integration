@@ -1,3 +1,9 @@
+# Trend Micro Deep Security AWS Security Hub Integration
+
+Send Deep Security security events to AWS Security Hub.
+
+Credit: This is a re-write of an [existing script.](https://github.com/deep-security/aws-security-hub)
+
 # Deep Security
 
 1. Set up SNS as per [these instructions.](https://www.trendmicro.com/aws/sending-security-event-data-amazon-sns/)
