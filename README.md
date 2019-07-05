@@ -19,13 +19,16 @@ Credit: This is a re-write of an [existing script.](https://github.com/deep-secu
 
 Note: If you're using multiple accounts, you will need to configure your [Master and Member accounts.](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-accounts.html)
 
-## SNS, IAM & Lambda
+## SNS & IAM
 
 1. Create a new SNS topic.
 2. Create a new IAM account with programmatic access.
 3. Give the account `sns:publish` access to the newly created SNS topic.
-4. Create a Lambda with **"basic Lambda permissions"**.
-5. Add a rule to allow **"BatchImportFindings"**.
+
+## Lambda & IAM
+
+1. Create a Lambda with **"basic Lambda permissions"**.
+2. Add rule to allow **"BatchImportFindings"**.
 
 # Deep Security
 

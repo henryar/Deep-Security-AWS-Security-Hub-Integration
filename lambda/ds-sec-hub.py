@@ -250,6 +250,7 @@ class DeepSec:
         host_group_name = self.ds_event.get('HostGroupName', 'N/A')
         host_sec_pol_name = self.ds_event.get('HostSecurityPolicyName', 'N/A')
         host_sec_pol_id = self.ds_event.get('HostSecurityPolicyID', 'N/A')
+        description = self.ds_event.get('Description', 'N/A')
 
         aff_event_type = AFF_EVENT_TYPES[self.event_type]
         log_date = self.ds_event['LogDate']  # ISO8601 formatted
@@ -258,12 +259,12 @@ class DeepSec:
         # Z suffix required by API
         msg_date = f'{current_tme}Z'
 
-
     
         aff_format = {
             'SchemaVersion': '2018-10-08',
             'Id': f'{AWS_REGION}/{host_owner_id}/{self.host_instance_id}/{tenant_id}/{event_id}',
             'ProductArn': DS_PRODUCT_ARNS[AWS_REGION],
+            'Description': description,
             'GeneratorId': f'trend-micro-deep-security-{aff_event_type}',
             'AwsAccountId': host_owner_id,
             'Types': [],  # Specific types are added to align with event type
